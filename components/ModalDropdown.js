@@ -21,7 +21,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import ListView from "deprecated-react-native-listview";
+import ListView from 'deprecated-react-native-listview';
 import PropTypes from 'prop-types';
 
 const TOUCHABLE_ELEMENTS = [
@@ -197,11 +197,12 @@ export default class ModalDropdown extends Component {
   };
 
   _renderModal() {
-    const {animated, accessible, dropdownStyle} = this.props;
+    const {animated, accessible, dropdownStyle, container} = this.props;
     const {showDropdown, loading} = this.state;
     if (showDropdown && this._buttonFrame) {
       const frameStyle = this._calcPosition();
       const animationType = animated ? 'fade' : 'none';
+      const {Component, style} = container;
       return (
         <Modal animationType={animationType}
                visible={true}
@@ -214,9 +215,9 @@ export default class ModalDropdown extends Component {
                                     onPress={this._onModalPress}
           >
             <View style={styles.modal}>
-              <View style={[styles.dropdown, dropdownStyle, frameStyle]}>
+              <Component style={[styles.dropdown, dropdownStyle, frameStyle, style]}>
                 {loading ? this._renderLoading() : this._renderDropdown()}
-              </View>
+              </Component>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -231,8 +232,9 @@ export default class ModalDropdown extends Component {
     const windowWidth = dimensions.width;
     const windowHeight = dimensions.height;
 
-    const dropdownHeight = (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
-      StyleSheet.flatten(styles.dropdown).height;
+    /*const dropdownHeight = (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
+      StyleSheet.flatten(styles.dropdown).height;*/
+    const dropdownHeight = (40 + StyleSheet.hairlineWidth) * this.props.options.length;
 
     const bottomSpace = windowHeight - this._buttonFrame.y - this._buttonFrame.h;
     const rightSpace = windowWidth - this._buttonFrame.x;
@@ -246,7 +248,8 @@ export default class ModalDropdown extends Component {
 
     if (showInLeft) {
       positionStyle.left = this._buttonFrame.x;
-    } else {
+    }
+    else {
       const dropdownWidth = (dropdownStyle && StyleSheet.flatten(dropdownStyle).width) ||
         (style && StyleSheet.flatten(style).width) || -1;
       if (dropdownWidth !== -1) {
@@ -287,7 +290,7 @@ export default class ModalDropdown extends Component {
                 style={styles.list}
                 dataSource={this._dataSource}
                 renderRow={this._renderRow}
-                renderSeparator={renderSeparator || this._renderSeparator}
+        //renderSeparator={renderSeparator || this._renderSeparator}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={showsVerticalScrollIndicator}
                 keyboardShouldPersistTaps={keyboardShouldPersistTaps}
