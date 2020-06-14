@@ -197,12 +197,12 @@ export default class ModalDropdown extends Component {
   };
 
   _renderModal() {
-    const {animated, accessible, dropdownStyle, container} = this.props;
+    const {animated, accessible, dropdownStyle, container = {}} = this.props;
     const {showDropdown, loading} = this.state;
     if (showDropdown && this._buttonFrame) {
       const frameStyle = this._calcPosition();
       const animationType = animated ? 'fade' : 'none';
-      const {Component, style} = container;
+      const {Component = View, style} = container;
       return (
         <Modal animationType={animationType}
                visible={true}
