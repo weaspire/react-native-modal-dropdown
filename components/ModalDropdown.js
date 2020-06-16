@@ -57,7 +57,9 @@ export default class ModalDropdown extends Component {
 
     onDropdownWillShow: PropTypes.func,
     onDropdownWillHide: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+
+    optionHeight: PropTypes.number
   };
 
   static defaultProps = {
@@ -68,7 +70,8 @@ export default class ModalDropdown extends Component {
     options: null,
     animated: true,
     showsVerticalScrollIndicator: true,
-    keyboardShouldPersistTaps: 'never'
+    keyboardShouldPersistTaps: 'never',
+    optionHeight: 40
   };
 
   constructor(props) {
@@ -226,7 +229,7 @@ export default class ModalDropdown extends Component {
   }
 
   _calcPosition() {
-    const {dropdownStyle, style, adjustFrame} = this.props;
+    const {dropdownStyle, style, adjustFrame, optionHeight} = this.props;
 
     const dimensions = Dimensions.get('window');
     const windowWidth = dimensions.width;
@@ -234,7 +237,7 @@ export default class ModalDropdown extends Component {
 
     /*const dropdownHeight = (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
       StyleSheet.flatten(styles.dropdown).height;*/
-    const dropdownHeight = (40 + StyleSheet.hairlineWidth) * this.props.options.length;
+    const dropdownHeight = (optionHeight + StyleSheet.hairlineWidth) * this.props.options.length;
 
     const bottomSpace = windowHeight - this._buttonFrame.y - this._buttonFrame.h;
     const rightSpace = windowWidth - this._buttonFrame.x;
@@ -242,7 +245,7 @@ export default class ModalDropdown extends Component {
     const showInLeft = rightSpace >= this._buttonFrame.x;
 
     const positionStyle = {
-      height: dropdownHeight,
+      //height: dropdownHeight,
       top: showInBottom ? this._buttonFrame.y + this._buttonFrame.h : Math.max(0, this._buttonFrame.y - dropdownHeight),
     };
 
@@ -413,7 +416,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     position: 'absolute',
-    height: (33 + StyleSheet.hairlineWidth) * 5,
+    //height: (33 + StyleSheet.hairlineWidth) * 5,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'lightgray',
     borderRadius: 2,
