@@ -218,7 +218,9 @@ export default class ModalDropdown extends Component {
                                     onPress={this._onModalPress}
           >
             <View style={styles.modal}>
-              <Component style={[styles.dropdown, dropdownStyle, frameStyle, style]}>
+              <Component
+                onLayout={e => this.dropdownHeight = e.nativeEvent.layout.height}
+                style={[styles.dropdown, dropdownStyle, frameStyle, style]}>
                 {loading ? this._renderLoading() : this._renderDropdown()}
               </Component>
             </View>
@@ -229,7 +231,7 @@ export default class ModalDropdown extends Component {
   }
 
   _calcPosition() {
-    const {dropdownStyle, style, adjustFrame, optionHeight} = this.props;
+    const {dropdownStyle, style, adjustFrame, optionHeight, options} = this.props;
 
     const dimensions = Dimensions.get('window');
     const windowWidth = dimensions.width;
@@ -237,7 +239,10 @@ export default class ModalDropdown extends Component {
 
     /*const dropdownHeight = (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
       StyleSheet.flatten(styles.dropdown).height;*/
-    const dropdownHeight = (optionHeight + StyleSheet.hairlineWidth) * this.props.options.length;
+    const dropdownHeight = Math.min(
+      this.dropdownHeight || MAX_DROPDOWN_HEIGHT,
+      (optionHeight + StyleSheet.hairlineWidth) * options.length
+    );
 
     const bottomSpace = windowHeight - this._buttonFrame.y - this._buttonFrame.h;
     const rightSpace = windowWidth - this._buttonFrame.x;
@@ -404,6 +409,8 @@ export default class ModalDropdown extends Component {
   };
 }
 
+const MAX_DROPDOWN_HEIGHT = Math.max(250, Dimensions.get('window').height / 2);
+
 const styles = StyleSheet.create({
   button: {
     justifyContent: 'center'
@@ -427,6 +434,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   list: {
+    maxHeight: MAX_DROPDOWN_HEIGHT
     //flexGrow: 1,
   },
   rowText: {
