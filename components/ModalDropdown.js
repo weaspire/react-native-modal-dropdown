@@ -91,7 +91,7 @@ export default class ModalDropdown extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let {buttonText, selectedIndex} = this.state;
     const {defaultIndex, defaultValue, options} = nextProps;
     buttonText = this._nextValue == null ? buttonText : this._nextValue;
@@ -319,6 +319,7 @@ export default class ModalDropdown extends Component {
     const {selectedIndex} = this.state;
     const key = `row_${rowID}`;
     const highlighted = rowID == selectedIndex;
+
     const row = !renderRow ?
       (<Text style={[
         styles.rowText,
@@ -330,12 +331,16 @@ export default class ModalDropdown extends Component {
         {rowData}
       </Text>) :
       renderRow(rowData, rowID, highlighted);
+
     const preservedProps = {
       key,
       accessible,
       onPress: () => this._onRowPress(rowData, sectionID, rowID, highlightRow),
     };
-    if (TOUCHABLE_ELEMENTS.find(name => name == row.type.displayName)) {
+
+    return React.cloneElement(row, preservedProps)
+
+    /*if (TOUCHABLE_ELEMENTS.find(name => name == row.type.displayName)) {
       const props = {...row.props};
       props.key = preservedProps.key;
       props.onPress = preservedProps.onPress;
@@ -377,7 +382,7 @@ export default class ModalDropdown extends Component {
       <TouchableHighlight {...preservedProps}>
         {row}
       </TouchableHighlight>
-    );
+    );*/
   };
 
   _onRowPress(rowData, sectionID, rowID, highlightRow) {
